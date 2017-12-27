@@ -16,8 +16,6 @@
 // 6.2 根据issue number，调用更新issue的状态为close
 
 // 其他一些备注
-// wt create 300-my-knowledge-task.js --secret GITHUB_ACCESS_TOKEN=1039896e67c1af7aadd00b5171ad693f2f213ca3 --secret ZENHUB_ACCESS_TOKEN=4310b1b95113ec54ce90fa51e04d336257d206179c0d3311b8a16af9a77cc261ce750c06b09abc34
-
 var express    = require('express');
 var Webtask    = require('webtask-tools');
 var bodyParser = require('body-parser');
@@ -35,8 +33,8 @@ var repo_name = 'oneforce/reading'
 app.post('/github/webhook', function (req, res) {
   console.log(req.webtaskContext.secrets);
 
-  var GITHUB_ACCESS_TOKEN = req.webtaskContext.secrets.GITHUB_ACCESS_TOKEN;//1039896e67c1af7aadd00b5171ad693f2f213ca3
-  var ZENHUB_ACCESS_TOKEN = req.webtaskContext.secrets.ZENHUB_ACCESS_TOKEN;//4310b1b95113ec54ce90fa51e04d336257d206179c0d3311b8a16af9a77cc261ce750c06b09abc34
+  var GITHUB_ACCESS_TOKEN = req.webtaskContext.secrets.GITHUB_ACCESS_TOKEN;
+  var ZENHUB_ACCESS_TOKEN = req.webtaskContext.secrets.ZENHUB_ACCESS_TOKEN;
   var payload = eval('('+req.body.payload+')');
   if (payload.action === 'opened') {
     fetch(payload.issue.url+'?access_token=' + GITHUB_ACCESS_TOKEN,{
@@ -45,7 +43,7 @@ app.post('/github/webhook', function (req, res) {
       body: '{"milestone":"1","assignees":["oneforce"]}',
     }).then(function(response){
       if(response.status >= 400) {
-        throw new Error("failed to update issue");
+        console.log("failed to update issue");
       } else {
         console.log("set issue[" + payload.issue.number +"] milestone success");
       }
@@ -58,7 +56,7 @@ app.post('/github/webhook', function (req, res) {
           body: '{ "estimate": 1 }',
         }).then(function(response){
                 if(response.status >= 400) {
-                  throw new Error("Bad response from zenhub server when set the estimate");
+                  console.log("Bad response from zenhub server when set the estimate");
                 } else {
                   console.log("Set issue[" + payload.issue.number +"] estimate success");
                 }
@@ -78,7 +76,7 @@ app.post('/instapaper/archive',function(req,res){
   fetch(queryIssueUrl).then(function(response){
     console.log(response.status);
       if(response.status >= 400) {
-        throw new Error("failed query the issue by title [" + payload.title +"]");
+        console.log("failed query the issue by title [" + payload.title +"]");
       } else {
         return response.json();
       }
@@ -92,7 +90,7 @@ app.post('/instapaper/archive',function(req,res){
           body: '{"state":"closed"}'
         }) .then(function(response){
           if(response.status >= 400) {
-            throw new Error("Bad response from github server");
+            console.log("Bad response from github server");
           } else {
             console.log("close issue success");
           }
