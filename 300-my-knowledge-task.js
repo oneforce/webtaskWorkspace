@@ -15,6 +15,8 @@
 // 6.1 根据title，查询issue number
 // 6.2 根据issue number，调用更新issue的状态为close
 
+// 其他一些备注
+// wt create 300-my-knowledge-task.js --secret GITHUB_ACCESS_TOKEN=1039896e67c1af7aadd00b5171ad693f2f213ca3 --secret ZENHUB_ACCESS_TOKEN=4310b1b95113ec54ce90fa51e04d336257d206179c0d3311b8a16af9a77cc261ce750c06b09abc34
 
 var express    = require('express');
 var Webtask    = require('webtask-tools');
@@ -27,7 +29,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 
-var repo_id = 115079045;
+var repo_id = 19376099;
 var repo_name = 'oneforce/reading'
 
 app.post('/github/webhook', function (req, res) {
